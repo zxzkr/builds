@@ -1,0 +1,25 @@
+version: "3"
+services:
+  radius:
+    image: krzzzkr/freeradius-ldap-wifi
+    restart: "always"
+    network_mode: bridge
+#    network_mode: host
+    ports:
+      - "1812:1812/udp"
+      - "1813:1813/udp"
+    environment:
+      - "LDAP_HOST=ldap.zzz.kr"
+      - "LDAP_PORT=389" 
+      - "LDAP_USER=CN=이름(zzzz),OU=사용자,OU=나몰라,DC=zzz,DC=kr"
+      - "LDAP_PASS=passsssw0rd"
+      - "LDAP_BASEDN=DC=zzz,DC=kr"
+      - "LDAP_USER_BASEDN=OU=사용자,OU=나몰라,DC=zzz,DC=kr"
+      - "LDAP_USER_FILTER=(sAMAccountName=%{%{Stripped-User-Name}:-%{User-Name}})"
+      - "LDAP_GROUP_BASEDN=OU=조직그룹,OU=조직체계,OU=나몰라,DC=zzz,DC=kr"
+      - "LDAP_GROUP_FILTER=(\\&(objectClass=group)(extensionAttribute1=Z001*))"
+      - "LDAP_RADIUS_ACCESS_GROUP=*Z001*"
+      - "RADIUS_CLIENT_CREDENTIALS=192.168.202.0:23:zzz111,172.16.0.0:12:zzz111,192.168.88.0:23:zzz111"
+#      - "RADIUSD_ARGS=-X -f -l stdout"
+#    volumes:
+#      - "./cert:/etc/freeradius/certs"
